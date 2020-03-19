@@ -36,7 +36,7 @@ const InputForm = (props: any) => {
         });
     };
 
-    const handleChange = (event: any) => {
+    const handleChange = (event: React.ChangeEvent<any>) => {
         setCurrentList(event.target.value);
     };
 
@@ -47,9 +47,9 @@ const InputForm = (props: any) => {
     }
     const createNewList = () => {
         if (newList) MongoApi.createList({listName: newList}, "list").then(res => {
-            setCurrentList(newList)
             props.rerender()
         })
+
         handleClose()
     }
 
@@ -69,7 +69,7 @@ const InputForm = (props: any) => {
                         id="name"
                         label="List name"
                         type="text"
-                        onChange={(data: any) => setNewList(data.target.value)}
+                        onChange={(data: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setNewList(data.target.value)}
                         value={newList}
                         fullWidth
                     />
@@ -112,7 +112,7 @@ const InputForm = (props: any) => {
                 name="name"
                 label="Name"
                 type="text"
-                onChange={(data: any) => handleNewItemChange(data)}
+                onChange={(data: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleNewItemChange(data)}
                 value={form.name}
                 fullWidth
             />
@@ -122,7 +122,7 @@ const InputForm = (props: any) => {
                 name="quantity"
                 label="Quantity"
                 type="number"
-                onChange={(data: any) => handleNewItemChange(data)}
+                onChange={(data: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => handleNewItemChange(data)}
                 value={form.quantity}
                 fullWidth
             />
