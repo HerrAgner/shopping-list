@@ -3,8 +3,8 @@
 ##### npm run build-ts
 ##### npm run start
 #
-###cd into shopping-list frontend
-#####npm install
-#####npm start
+### cd into shopping-list frontend
+##### npm install
+##### npm start
 #
-##Be sure to have mongodb activated
+#### Be sure to have mongodb activated
