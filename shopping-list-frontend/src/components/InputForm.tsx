@@ -41,12 +41,15 @@ const InputForm = (props: any) => {
     };
 
     const onSubmit = () => {
-        if (form.name && form.quantity && form.category) {
+        if (form.name && form.quantity && form.category && currentList) {
             MongoApi.addItemToList(form, "list", currentList).then(res => props.rerender())
         }
     }
     const createNewList = () => {
-        if (newList) MongoApi.createList({listName: newList}, "list").then(res => props.rerender())
+        if (newList) MongoApi.createList({listName: newList}, "list").then(res => {
+            setCurrentList(newList)
+            props.rerender()
+        })
         handleClose()
     }
 
