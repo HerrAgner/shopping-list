@@ -10,7 +10,7 @@ import {
     MenuItem,
     Select,
     TextField,
-    Paper, Typography
+    Typography
 } from "@material-ui/core";
 import {list, listItem} from "../interfaces/list";
 import MongoApi from "../api/MongoApi";
@@ -54,7 +54,7 @@ const InputForm = (props: any) => {
     }
 
     return (
-        <form style={{display: "flex",
+        <div style={{display: "flex",
             flexDirection: "column",
             width: "100%"}}>
             <Dialog
@@ -140,7 +140,7 @@ const InputForm = (props: any) => {
             </FormControl>
 
                 <Button onClick={onSubmit} style={{marginTop: "1vh"}} variant="contained">Add item</Button>
-        </form>
+        </div>
     )
 }
 

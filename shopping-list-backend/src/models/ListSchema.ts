@@ -1,14 +1,16 @@
-import * as mongoose from 'mongoose';
+import { Schema, model as mongooseModel, Model, Document } from "mongoose";
 
-const ListSchema = new mongoose.Schema({
-    listName: {type: String, required: true},
-    listItems: [{
-        name: {type: String, required: true},
-        quantity: {type: Number, required: true},
-        category: {type: String, required: true}
-    }]
+const ListSchema = new Schema({
+  listName: { type: String, required: true },
+  listItems: [
+    {
+      name: { type: String, required: true },
+      quantity: { type: Number, required: true },
+      category: { type: String, required: true }
+    }
+  ]
 });
 
-const List: mongoose.Model<any> = mongoose.model("list", ListSchema);
+const List: Model<Document> = mongooseModel("list", ListSchema);
 
-export default List
+export default List;
