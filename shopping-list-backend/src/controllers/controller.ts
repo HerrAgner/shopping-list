@@ -1,12 +1,12 @@
-import { model as mongooseModel } from "mongoose";
+import { model } from "mongoose";
 import { Request, Response } from "express";
 import List from "../models/ListSchema";
 
-mongooseModel("list");
+model("list");
 
 export const getAllLists = (req: Request, res: Response) => {
   try {
-    mongooseModel(req.params.collection)
+    model(req.params.collection)
       .find()
       .then(item => {
         res.json(item);
@@ -17,7 +17,7 @@ export const getAllLists = (req: Request, res: Response) => {
 };
 
 export const getOneListAndUpdate = (req: Request, res: Response) => {
-  mongooseModel(req.params.collection)
+  model(req.params.collection)
     .findOneAndUpdate(
       { _id: req.params.id },
       {
@@ -38,7 +38,7 @@ export const getOneListAndUpdate = (req: Request, res: Response) => {
 };
 
 export const getOneItemAndUpdate = (req: Request, res: Response) => {
-  mongooseModel(req.params.collection)
+  model(req.params.collection)
     .findOneAndUpdate(
       { _id: req.params.listId, "listItems._id": req.params.itemId },
       {
@@ -59,7 +59,7 @@ export const getOneItemAndUpdate = (req: Request, res: Response) => {
 };
 
 export const addOneList = (req: Request, res: Response) => {
-  mongooseModel(req.params.collection)
+  model(req.params.collection)
     .create(new List(req.body))
     .then(item => {
       res.json(item);
@@ -70,7 +70,7 @@ export const addOneList = (req: Request, res: Response) => {
 };
 
 export const addOneItemToList = (req: Request, res: Response) => {
-  mongooseModel(req.params.collection)
+  model(req.params.collection)
     .findOneAndUpdate(
       { _id: req.params.listId },
       { $push: { listItems: req.body } },
@@ -85,7 +85,7 @@ export const addOneItemToList = (req: Request, res: Response) => {
 };
 
 export const deleteOneList = (req: Request, res: Response) => {
-  mongooseModel(req.params.collection)
+  model(req.params.collection)
     .deleteOne({ _id: req.params.id })
     .then(item => {
       item.n > 0 ? res.json(item) : res.json("No matches.");
@@ -96,7 +96,7 @@ export const deleteOneList = (req: Request, res: Response) => {
 };
 
 export const deleteOneItemFromList = (req: Request, res: Response) => {
-  mongooseModel(req.params.collection)
+  model(req.params.collection)
     .updateOne(
       { _id: req.params.listId },
       { $pull: { listItems: { _id: req.params.itemId } } }

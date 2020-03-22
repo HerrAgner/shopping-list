@@ -40,15 +40,15 @@ type InputFormProps = {
 
 const InputForm = ({ lists, addItem, addList }: InputFormProps) => {
   const classes = useStyles();
-  const [newItem, setNewItem]: [listItem, React.Dispatch<React.SetStateAction<listItem>>] = useState<listItem>({
+  const [newItem, setNewItem] = useState<listItem>({
     _id: new ObjectID().toString(),
     name: "",
     quantity: 0,
     category: ""
   });
   const [currentListId, setCurrentListId] = useState("");
-  const [open, setOpen] = React.useState(false);
-  const [newList, setNewList] = React.useState("");
+  const [open, setOpen] = useState(false);
+  const [newList, setNewList] = useState("");
 
   const handleOpen = () => {
     setOpen(true);
@@ -119,7 +119,10 @@ const InputForm = ({ lists, addItem, addList }: InputFormProps) => {
       <Typography variant="h6">Choose list</Typography>
       <FormControl>
         <InputLabel>List</InputLabel>
-        <Select value={currentListId} onChange={event => handleListChange(event.target.value as string)}>
+        <Select
+          value={currentListId}
+          onChange={event => handleListChange(event.target.value as string)}
+        >
           {lists.map((list: list) => {
             return (
               <MenuItem key={list._id + "selectList"} value={list._id}>

@@ -1,4 +1,4 @@
-import { Schema, model as mongooseModel, Model, Document } from "mongoose";
+import { Schema, model, Model, Document } from "mongoose";
 
 const ListSchema = new Schema({
   listName: { type: String, required: true },
@@ -11,6 +11,6 @@ const ListSchema = new Schema({
   ]
 });
 
-const List: Model<Document> = mongooseModel("list", ListSchema);
+const List: Model<Document> = model("list", ListSchema);
 
 export default List;
