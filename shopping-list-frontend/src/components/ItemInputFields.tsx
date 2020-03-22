@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import {
   FormControl,
   InputLabel,
@@ -7,6 +7,7 @@ import {
   Select,
   TextField
 } from "@material-ui/core";
+import {listItem} from "../interfaces/list";
 
 const useStyles = makeStyles(() => ({
   category: {
@@ -14,7 +15,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const ItemInputFields = ({ setNewItem, newItem }: any) => {
+type ItemInputFieldProps = {
+  setNewItem: Dispatch<SetStateAction<listItem>>,
+  newItem: listItem
+}
+
+const ItemInputFields = ({ setNewItem, newItem }: ItemInputFieldProps) => {
   const classes = useStyles();
   const { name, quantity, category } = newItem;
 
@@ -22,7 +28,7 @@ const ItemInputFields = ({ setNewItem, newItem }: any) => {
     name: string | undefined,
     value: string | number | unknown
   ) => {
-    if (name && value)
+    if (name)
       setNewItem({
         ...newItem,
         [name]: value
@@ -47,7 +53,7 @@ const ItemInputFields = ({ setNewItem, newItem }: any) => {
         name="quantity"
         type="number"
         onChange={data =>
-          handleNewItemChange(data.target.name, data.target.value)
+          handleNewItemChange(data.target.name, Number(data.target.value))
         }
         value={quantity}
         fullWidth

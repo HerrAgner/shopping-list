@@ -163,7 +163,6 @@ const ShoppingList = () => {
                         key={listItem._id}
                         deleteItem={deleteItem}
                         editItem={editItem}
-                        addList={addList}
                       />
                     );
                   })}

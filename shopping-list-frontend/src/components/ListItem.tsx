@@ -22,13 +22,26 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+type ListItemProps = {
+  listId: string | undefined;
+  listItem: listItem;
+  deleteItem: (listId: string, _id: string, listIndex: number) => void;
+  editItem: (
+    listId: string,
+    _id: string,
+    newItem: listItem,
+    listIndex: number
+  ) => void;
+  listIndex: number;
+};
+
 export const ListItem = ({
   listId,
   listItem,
   deleteItem,
   editItem,
   listIndex
-}: any) => {
+}: ListItemProps) => {
   const classes = useStyles();
   const { name, quantity, category, _id } = listItem;
   const [open, setOpen] = useState(false);
@@ -48,13 +61,19 @@ export const ListItem = ({
   };
 
   const handleApplyChanges = () => {
-    if (newItem.name && newItem.quantity > 0 && newItem.category)
+    if (
+      listId &&
+      _id &&
+      newItem.name &&
+      newItem.quantity > 0 &&
+      newItem.category
+    )
       editItem(listId, _id, newItem, listIndex);
     handleClose();
   };
 
   const handleDelete = () => {
-    deleteItem(listId, _id, listIndex);
+    if (listId && _id && listIndex) deleteItem(listId, _id, listIndex);
     handleClose();
   };
 

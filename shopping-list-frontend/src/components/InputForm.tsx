@@ -28,9 +28,19 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const InputForm = ({ lists, addItem, addList }: any) => {
+type InputFormProps = {
+  lists: list[];
+  addItem: (
+    newItem: listItem,
+    currentListId: string,
+    listIndex: number
+  ) => void;
+  addList: (newList: string) => void;
+};
+
+const InputForm = ({ lists, addItem, addList }: InputFormProps) => {
   const classes = useStyles();
-  const [newItem, setNewItem] = useState<listItem>({
+  const [newItem, setNewItem]: [listItem, React.Dispatch<React.SetStateAction<listItem>>] = useState<listItem>({
     _id: new ObjectID().toString(),
     name: "",
     quantity: 0,
@@ -48,8 +58,8 @@ const InputForm = ({ lists, addItem, addList }: any) => {
     setOpen(false);
   };
 
-  const handleListChange = (event: React.ChangeEvent<any>) => {
-    setCurrentListId(event.target.value);
+  const handleListChange = (value: string) => {
+    setCurrentListId(value);
   };
 
   const handleAddItem = () => {
@@ -109,7 +119,7 @@ const InputForm = ({ lists, addItem, addList }: any) => {
       <Typography variant="h6">Choose list</Typography>
       <FormControl>
         <InputLabel>List</InputLabel>
-        <Select value={currentListId} onChange={handleListChange}>
+        <Select value={currentListId} onChange={event => handleListChange(event.target.value as string)}>
           {lists.map((list: list) => {
             return (
               <MenuItem key={list._id + "selectList"} value={list._id}>
