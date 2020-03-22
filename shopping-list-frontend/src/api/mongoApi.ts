@@ -1,7 +1,7 @@
 import axios from "axios";
-import {list, listItem} from "../interfaces/list";
+import { list, listItem } from "../interfaces/list";
 
-const baseUrl = "http://localhost:3001/api/";
+const baseUrl = "/api/";
 
 const getAllLists = async (collection: string) => {
   let url = baseUrl + collection;
@@ -10,10 +10,7 @@ const getAllLists = async (collection: string) => {
   return response.data;
 };
 
-const createList = async (
-  newObject: list,
-  collection: string
-) => {
+const createList = async (newObject: list, collection: string) => {
   let url = baseUrl + collection;
   const request = axios.post(url, newObject);
   let response = await request;
