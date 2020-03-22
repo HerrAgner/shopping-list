@@ -122,15 +122,15 @@ const ShoppingList = () => {
   };
 
   const addList = (newListName: string) => {
-    let newList = { _id: new ObjectId().toString(), listName: newListName, listItems: [] }
-
+    let newList = {
+      _id: new ObjectId().toString(),
+      listName: newListName,
+      listItems: []
+    };
 
     if (newListName)
       mongoApi.createList(newList, "list").then(res => {
-        setLists([
-          ...lists,
-          newList
-        ]);
+        setLists([...lists, newList]);
       });
   };
 

@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction} from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   FormControl,
   InputLabel,
@@ -7,7 +7,7 @@ import {
   Select,
   TextField
 } from "@material-ui/core";
-import {listItem} from "../interfaces/list";
+import { listItem } from "../interfaces/list";
 
 const useStyles = makeStyles(() => ({
   category: {
@@ -16,9 +16,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 type ItemInputFieldProps = {
-  setNewItem: Dispatch<SetStateAction<listItem>>,
-  newItem: listItem
-}
+  setNewItem: Dispatch<SetStateAction<listItem>>;
+  newItem: listItem;
+};
 
 const ItemInputFields = ({ setNewItem, newItem }: ItemInputFieldProps) => {
   const classes = useStyles();
