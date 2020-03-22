@@ -73,8 +73,7 @@ export const ListItem = ({
   };
 
   const handleDelete = () => {
-    if (listId && _id && listIndex) deleteItem(listId, _id, listIndex);
-    handleClose();
+    if (listId && _id) deleteItem(listId, _id, listIndex);
   };
 
   const dialog = (
