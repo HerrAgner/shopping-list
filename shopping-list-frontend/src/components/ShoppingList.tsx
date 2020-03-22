@@ -1,87 +1,180 @@
-import React, {useEffect, useState} from "react"
+import React, { useEffect, useState } from "react";
 import InputForm from "./InputForm";
-import {Container, Grid, Hidden, IconButton, List, makeStyles, Typography} from "@material-ui/core";
-import MongoApi from "../api/MongoApi";
-import {list} from "../interfaces/list";
-import {ItemInList} from "./ItemInList";
+import {
+  Container,
+  Grid,
+  Hidden,
+  IconButton,
+  List,
+  makeStyles,
+  Typography
+} from "@material-ui/core";
+import { list, listItem } from "../interfaces/list";
+import { ListItem } from "./ListItem";
 import DeleteIcon from "@material-ui/icons/Delete";
+import mongoApi from "../api/mongoApi";
+import { ObjectId } from "bson";
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        display: "flex",
-        justifyContent: "center",
-        width: "100%",
-        padding: "2vw"
-    },
-    formContainer: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    }
+  root: {
+    display: "flex",
+    justifyContent: "center",
+    width: "100%",
+    padding: "2vw"
+  },
+  formContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  grid: {
+    display: "flex"
+  },
+  listHeader: {
+    display: "flex",
+    backgroundColor: "lightgray",
+    justifyContent: "center"
+  },
+  listTitle: {
+    alignSelf: "center"
+  }
 }));
+
 const ShoppingList = () => {
-    const classes = useStyles();
-    const [lists, setLists] = useState([])
-    const [update, setUpdate] = useState(0)
+  const classes = useStyles();
+  const [lists, setLists] = useState<list[]>([]);
 
-    useEffect(() => {
-        MongoApi.getAllLists("list").then(res => setLists(res))
-    }, [update])
+  useEffect(() => {
+    mongoApi.getAllLists("list").then(res => setLists(res));
+  }, []);
 
-    const rerender = () => {
-        setUpdate(update + 1)
-    }
+  const deleteList = (listId: string) => {
+    if (listId)
+      mongoApi
+        .deleteList(listId, "list")
+        .then(res =>
+          setLists(lists.filter((list: list) => list._id !== listId))
+        );
+  };
 
-    const deleteList = (listId: string) => {
-        if (listId) MongoApi.deleteList(listId, "list").then(() => rerender())
-    }
+  const deleteItem = (listId: string, itemId: string, listIndex: number) => {
+    mongoApi.deleteListItem(listId, itemId, "list").then(res => {
+      setLists((prevLists: list[]) => {
+        return prevLists.map((list: list, idx: number) => {
+          if (listIndex === idx) {
+            return {
+              ...prevLists[listIndex],
+              listItems: [
+                ...prevLists[listIndex].listItems.filter(
+                  (item: listItem) => item._id !== itemId
+                )
+              ]
+            };
+          } else {
+            return list;
+          }
+        });
+      });
+    });
+  };
 
-    if (lists) {
-        return (
+  const addItem = (newItem: listItem, listId: string, listIndex: number) => {
+    mongoApi.addItemToList(newItem, listId, "list").then(res => {
+      setLists((prevLists: list[]) => {
+        return prevLists.map((list: list, idx: number) => {
+          if (listIndex === idx) {
+            return {
+              ...prevLists[listIndex],
+              listItems: [...prevLists[listIndex].listItems, newItem]
+            };
+          } else {
+            return list;
+          }
+        });
+      });
+    });
+  };
 
-            <Container className={classes.root}>
-            <Grid item md={6} style={{display:"flex"}}>
-                <Grid item md={2} implementation="css" component={Hidden} />
-                <Grid item md={8}>
-                    <InputForm rerender={rerender} lists={lists}/>
-                </Grid>
-            </Grid>
+  const editItem = (
+    listId: string,
+    itemId: string,
+    newItem: listItem,
+    listIndex: number
+  ) => {
+    mongoApi.editListItem(listId, itemId, newItem, "list").then(res => {
+      setLists((prevLists: list[]) => {
+        return prevLists.map((list: list, idx: number) => {
+          if (listIndex === idx) {
+            return {
+              ...prevLists[listIndex],
+              listItems: [
+                ...prevLists[listIndex].listItems.map((item: listItem) => {
+                  return item._id === itemId ? { ...newItem } : item;
+                })
+              ]
+            };
+          } else {
+            return list;
+          }
+        });
+      });
+    });
+  };
 
-                <Grid item md={6}>
-                    {lists.map((list: list) => {
-                            return (
-                            <div key={list._id}>
-                                <div style={{display:"flex", backgroundColor:"lightgray", justifyContent:"center"}}>
-                                <Typography variant="h6" style={{alignSelf:"center"}}>
-                                    {list.listName}
-                                </Typography>
-                                <IconButton onClick={e => deleteList(list._id!)} edge="end">
-                                    <DeleteIcon/>
-                                </IconButton>
-                                </div>
-                                <div>
-                                    <List dense={true}>
-                                        {list.listItems.map(listItem => {
-                                            return (
-                                                <ItemInList
-                                                    listId={list._id} listItem={listItem} rerender={rerender}
-                                                    key={listItem._id} style={{backgroundColor: "beige"}}/>
-                                            )
-                                        })}
+  const addList = (newList: string) => {
+    if (newList)
+      mongoApi.createList({ listName: newList }, "list").then(res => {
+        setLists([
+          ...lists,
+          { _id: new ObjectId().toString(), listName: newList, listItems: [] }
+        ]);
+      });
+  };
 
-                                    </List>
-                                </div>
-                            </div>
-                        )
-                    })}
-                </Grid>
-            </Container>
-        )
-    } else {
-        return (
-            <div>loading</div>
-        )
-    }
+  return (
+    <Container className={classes.root}>
+      <Grid item md={6} className={classes.grid}>
+        <Grid item md={2} implementation="css" component={Hidden} />
+        <Grid item md={8}>
+          <InputForm lists={lists} addList={addList} addItem={addItem} />
+        </Grid>
+      </Grid>
 
-}
-export default ShoppingList
+      <Grid item md={6}>
+        {lists.map((list: list, listIndex: number) => {
+          return (
+            <div key={list._id}>
+              <div className={classes.listHeader}>
+                <Typography variant="h6" className={classes.listTitle}>
+                  {list.listName}
+                </Typography>
+                <IconButton onClick={e => deleteList(list._id!)} edge="end">
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+              <div>
+                <List dense={true}>
+                  {list.listItems.map(listItem => {
+                    return (
+                      <ListItem
+                        listId={list._id}
+                        listIndex={listIndex}
+                        listItem={listItem}
+                        key={listItem._id}
+                        deleteItem={deleteItem}
+                        editItem={editItem}
+                        addList={addList}
+                      />
+                    );
+                  })}
+                </List>
+              </div>
+            </div>
+          );
+        })}
+      </Grid>
+    </Container>
+  );
+};
+
+export default ShoppingList;
