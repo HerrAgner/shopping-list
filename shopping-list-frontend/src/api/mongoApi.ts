@@ -1,5 +1,5 @@
 import axios from "axios";
-import { listItem } from "../interfaces/list";
+import {list, listItem} from "../interfaces/list";
 
 const baseUrl = "http://localhost:3001/api/";
 
@@ -11,7 +11,7 @@ const getAllLists = async (collection: string) => {
 };
 
 const createList = async (
-  newObject: { listName: string },
+  newObject: list,
   collection: string
 ) => {
   let url = baseUrl + collection;

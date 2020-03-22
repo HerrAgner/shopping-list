@@ -121,12 +121,15 @@ const ShoppingList = () => {
     });
   };
 
-  const addList = (newList: string) => {
-    if (newList)
-      mongoApi.createList({ listName: newList }, "list").then(res => {
+  const addList = (newListName: string) => {
+    let newList = { _id: new ObjectId().toString(), listName: newListName, listItems: [] }
+
+
+    if (newListName)
+      mongoApi.createList(newList, "list").then(res => {
         setLists([
           ...lists,
-          { _id: new ObjectId().toString(), listName: newList, listItems: [] }
+          newList
         ]);
       });
   };

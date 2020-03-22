@@ -59,9 +59,8 @@ export const getOneItemAndUpdate = (req: Request, res: Response) => {
 };
 
 export const addOneList = (req: Request, res: Response) => {
-  const list = new List({ listName: req.body.listName, listItems: [] });
   mongooseModel(req.params.collection)
-    .create(list)
+    .create(new List(req.body))
     .then(item => {
       res.json(item);
     })
